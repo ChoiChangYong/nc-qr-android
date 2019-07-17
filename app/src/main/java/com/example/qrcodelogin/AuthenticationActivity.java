@@ -92,6 +92,7 @@ public class AuthenticationActivity extends AppCompatActivity {
     private void validationUserToken(){
         SharedPreferences mPrefs = getSharedPreferences("token", MODE_PRIVATE);
         userToken = mPrefs.getString("userToken", "empty");
+        System.out.println("userToken : "+userToken);
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
