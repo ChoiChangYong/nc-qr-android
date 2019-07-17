@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "149549375071",
+    "firebase_url": "https://nonpasswordlogin.firebaseio.com",
+    "project_id": "nonpasswordlogin",
+    "storage_bucket": "nonpasswordlogin.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:149549375071:android:6febc67f43a25aff",
+        "android_client_info": {
+          "package_name": "com.example.qrcodelogin"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "149549375071-s6foi5eb3vai5mklq9fkq09qrnefll5f.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.qrcodelogin",
+            "certificate_hash": "1d77156535367c99dc530844dc5c89b20d349576"
+          }
+        },
+        {
+          "client_id": "149549375071-p2p5d4e2kk11aoo1g8ag2jrfl7scu891.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBlI5t9QyzK4e1Cn4JlTWKdwtIR_6su82Y"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "149549375071-p2p5d4e2kk11aoo1g8ag2jrfl7scu891.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
