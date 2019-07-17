@@ -14,7 +14,6 @@ import android.widget.Toast;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
-import com.google.gson.Gson;
 
 import org.json.JSONObject;
 
@@ -55,7 +54,7 @@ public class LoginActivity extends AppCompatActivity{
                         @Override
                         public void onResponse(String response) {
                             try {
-                                System.out.println("response : " + response);
+                                System.out.println("/login response : " + response);
                                 JSONObject jsonResponse = new JSONObject(response);
 
                                 String result = jsonResponse.getString("result");
@@ -100,7 +99,7 @@ public class LoginActivity extends AppCompatActivity{
             @Override
             public void onResponse(String response) {
                 try {
-                    System.out.println("response : " + response);
+                    System.out.println("/user-token/validation response : " + response);
                     JSONObject jsonResponse = new JSONObject(response);
 
                     String result = jsonResponse.getString("result");
@@ -114,14 +113,15 @@ public class LoginActivity extends AppCompatActivity{
                         startActivity(intent);
                         finish();
 
-                    } else if (result.equals("0")) {
-                        String message = jsonResponse.getString("message");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                        builder.setMessage(message)
-                                .setNegativeButton("확인", null)
-                                .create()
-                                .show();
                     }
+//                    else if (result.equals("0")) {
+//                        String message = jsonResponse.getString("message");
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+//                        builder.setMessage(message)
+//                                .setNegativeButton("확인", null)
+//                                .create()
+//                                .show();
+//                    }
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
