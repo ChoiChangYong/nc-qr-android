@@ -19,7 +19,7 @@ import org.json.JSONObject;
 
 public class LoginActivity extends AppCompatActivity{
 
-    Button loginBtn;
+    Button loginBtn, joinBtn;
     EditText idText, pwText;
     String redirectQrToken;
 
@@ -40,6 +40,7 @@ public class LoginActivity extends AppCompatActivity{
 
     private void initView() {
         loginBtn = (Button) findViewById(R.id.login_btn);
+        joinBtn = (Button) findViewById(R.id.join_btn);
         idText = (EditText) findViewById(R.id.login_id_input);
         pwText = (EditText) findViewById(R.id.login_pw_input);
 
@@ -97,6 +98,14 @@ public class LoginActivity extends AppCompatActivity{
                     RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
                     queue.add(loginRequest);
                 }
+            }
+        });
+
+        joinBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), JoinActivity.class);
+                startActivity(intent);
             }
         });
     }
