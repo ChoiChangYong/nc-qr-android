@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class UserTokenValidationRequest extends StringRequest {
 
-    final static private String URL = "http://172.19.148.51:3000/user-token/validation";
+    final static private String URL = "http://172.19.144.61:3000/user-token/validation";
     private Map<String, String> parameters;
 
     public UserTokenValidationRequest(String user_token, Response.Listener<String> listener){

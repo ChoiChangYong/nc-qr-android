@@ -21,6 +21,7 @@ public class LoginActivity extends AppCompatActivity{
 
     Button loginBtn;
     EditText idText, pwText;
+    String redirectQrToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,6 +34,8 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void initData() {
+        Intent intent = getIntent();
+        redirectQrToken = intent.getStringExtra("redirectQrToken");
     }
 
     private void initView() {
@@ -59,7 +62,6 @@ public class LoginActivity extends AppCompatActivity{
 
                                 String result = jsonResponse.getString("result");
                                 if (result.equals("1")) {
-
                                     //Creating a shared preference
                                     SharedPreferences mPrefs = getSharedPreferences("token", MODE_PRIVATE);
                                     SharedPreferences.Editor prefsEditor = mPrefs.edit();
@@ -68,7 +70,15 @@ public class LoginActivity extends AppCompatActivity{
                                     prefsEditor.putString("userToken", userToken);
                                     prefsEditor.commit();
 
-                                    validationUserToken();
+                                    if(redirectQrToken!=null){
+                                        Intent intent = new Intent(getApplicationContext(), AuthenticationActivity.class);
+                                        intent.putExtra("redirectQrToken", redirectQrToken);
+                                        startActivity(intent);
+                                        finish();
+                                    }
+                                    else {
+                                        validationUserToken();
+                                    }
                                 } else if (result.equals("0")) {
                                     String message = jsonResponse.getString("message");
                                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
