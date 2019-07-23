@@ -6,16 +6,15 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class QRTokenValidationRequest extends StringRequest {
+public class GUIDValidationRequest extends StringRequest {
 
-    final static private String URL = "http://172.19.144.61:3000/qrcode-auth";
+    final static private String URL = "http://172.19.144.61:3000/guid/validation";
     private Map<String, String> parameters;
 
-    public QRTokenValidationRequest(String user_token, String qr_token, Response.Listener<String> listener){
+    public GUIDValidationRequest(String uuid, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
-        parameters.put("user_token", user_token);
-        parameters.put("qr_token", qr_token);
+        parameters.put("uuid",uuid);
     }
 
     @Override

@@ -21,29 +21,44 @@ public class AuthenticationActivity extends AppCompatActivity {
     String qrToken, userToken;
     AlertDialog alertDialog;
     String id, name;
+    Uri uri;
+    String redirectQrToken;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_authentication);
-        Intent intent = getIntent();
-        if (intent == null || intent.getData() == null) {
-            finish();
-        }
 
-        openDeepLink(intent.getData());
+        Intent intent = getIntent();
+//        if (intent == null || intent.getData() == null) {
+//            finish();
+//        }
+
+        redirectQrToken = intent.getStringExtra("redirectQrToken");
+        System.out.println("redirectQrToken : "+redirectQrToken);
+        if(redirectQrToken!=null){
+            qrToken = redirectQrToken;
+            SharedPreferences mPrefs = getSharedPreferences("token", MODE_PRIVATE);
+            userToken = mPrefs.getString("userToken", "empty");
+
+            validationQRToken();
+        }
+        else {
+            openDeepLink(intent.getData());
+        }
     }
 
     private void openDeepLink(Uri deepLink) {
         String path = deepLink.getPath();
 
-        Uri uri = getIntent().getData();
+        uri = getIntent().getData();
+        System.out.println("[openDeepLink] uri : "+uri);
         qrToken = uri.getQueryParameter("qr_token");
+        redirectQrToken = qrToken;
         System.out.println("[openDeepLink] qrToken : "+qrToken);
 
         if (QRLOGIN_DEEP_LINK.equals(path)) {
             validationUserToken();
-            validationQRToken();
         }
     }
 
@@ -59,21 +74,22 @@ public class AuthenticationActivity extends AppCompatActivity {
                     if (result.equals("1")) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(AuthenticationActivity.this);
                         builder.setMessage("QR코드 로그인 성공!!")
-                                .setNegativeButton("확인", null);
+                                .setPositiveButton("확인", null);
                         alertDialog = builder.create();
                         alertDialog.show();
                     } else if (result.equals("0")) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(AuthenticationActivity.this);
                         builder.setMessage("만료된 QR코드입니다.\n웹페이지에서 다시 발급받아주세요!")
-                                .setNegativeButton("확인", new DialogInterface.OnClickListener() {
-                                    public void onClick(DialogInterface dialog, int id) {
-                                        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-                                        intent.putExtra("id", id);
-                                        intent.putExtra("name", name);
-                                        startActivity(intent);
-                                        finish();
-                                    }
-                                });
+                                .setPositiveButton("확인", null);
+//                        new DialogInterface.OnClickListener() {
+//                            public void onClick(DialogInterface dialog, int id) {
+//                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//                                intent.putExtra("id", id);
+//                                intent.putExtra("name", name);
+//                                startActivity(intent);
+//                                finish();
+//                            }
+//                        }
                         alertDialog = builder.create();
                         alertDialog.show();
 
@@ -106,8 +122,11 @@ public class AuthenticationActivity extends AppCompatActivity {
                     if (result.equals("1")) {
                         id = jsonResponse.getString("id");
                         name = jsonResponse.getString("name");
+                        validationQRToken();
                     } else if (result.equals("0")) {
-                        startActivity(new Intent(getApplicationContext(), LoginActivity.class));
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        intent.putExtra("redirectQrToken", redirectQrToken);
+                        startActivity(intent);
                         finish();
                     }
                 } catch (Exception e) {

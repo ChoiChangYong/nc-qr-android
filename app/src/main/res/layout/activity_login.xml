@@ -10,7 +10,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1.5"
+        android:layout_weight="1"
         android:gravity="center"
         android:orientation="vertical">
 
@@ -30,7 +30,7 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_weight="1"
+        android:layout_weight="1.5"
         android:orientation="vertical">
 
         <EditText
@@ -49,6 +49,13 @@
             android:layout_marginVertical="10dp"
             android:inputType="textPassword"
             android:hint="PASSWORD" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="1.5"
+        android:orientation="vertical">
 
         <Button
             android:id="@+id/login_btn"
@@ -58,7 +65,13 @@
             android:layout_marginVertical="10dp"
             android:background="#ffc761"
             android:text="로그인" />
-
+        <Button
+            android:id="@+id/reset_btn"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="60dp"
+            android:layout_marginVertical="10dp"
+            android:text="디바이스 인증 초기화" />
     </LinearLayout>
 
 </LinearLayout>
