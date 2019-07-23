@@ -33,7 +33,7 @@ import javax.crypto.NoSuchPaddingException;
 import javax.crypto.SecretKey;
 
 @RequiresApi(api= Build.VERSION_CODES.M)
-public class JoinActivity extends AppCompatActivity {
+public class DeviceRegistrationActivity extends AppCompatActivity {
     final String TAG = "MainActivity";
     private ImageView iv_fingerprint;
     private TextView tv_message;
@@ -50,7 +50,7 @@ public class JoinActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_join);
+        setContentView(R.layout.activity_deviceregistration);
 
         initData();
         initView();

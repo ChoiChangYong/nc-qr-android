@@ -74,13 +74,13 @@ public class AuthenticationActivity extends AppCompatActivity {
                     if (result.equals("1")) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(AuthenticationActivity.this);
                         builder.setMessage("QR코드 로그인 성공!!")
-                                .setNegativeButton("확인", null);
+                                .setPositiveButton("확인", null);
                         alertDialog = builder.create();
                         alertDialog.show();
                     } else if (result.equals("0")) {
                         AlertDialog.Builder builder = new AlertDialog.Builder(AuthenticationActivity.this);
                         builder.setMessage("만료된 QR코드입니다.\n웹페이지에서 다시 발급받아주세요!")
-                                .setNegativeButton("확인", null);
+                                .setPositiveButton("확인", null);
 //                        new DialogInterface.OnClickListener() {
 //                            public void onClick(DialogInterface dialog, int id) {
 //                                Intent intent = new Intent(getApplicationContext(), MainActivity.class);

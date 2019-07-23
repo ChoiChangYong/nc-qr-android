@@ -66,13 +66,12 @@
             android:background="#ffc761"
             android:text="로그인" />
         <Button
-            android:id="@+id/join_btn"
+            android:id="@+id/reset_btn"
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="60dp"
             android:layout_marginVertical="10dp"
-            android:visibility="invisible"
-            android:text="회원가입" />
+            android:text="디바이스 인증 초기화" />
     </LinearLayout>
 
 </LinearLayout>

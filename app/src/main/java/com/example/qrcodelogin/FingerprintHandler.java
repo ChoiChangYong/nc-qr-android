@@ -68,11 +68,6 @@ public class FingerprintHandler extends FingerprintManager.AuthenticationCallbac
             tv_message.setTextColor(ContextCompat.getColor(context, R.color.colorAccent));
         } else {//지문인증 성공
             tv_message.setTextColor(ContextCompat.getColor(context, R.color.colorPrimary));
-
-            //sound effect
-            Uri notification = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-            Ringtone r = RingtoneManager.getRingtone((Activity)context, notification);
-            r.play();
         }
     }
 }
