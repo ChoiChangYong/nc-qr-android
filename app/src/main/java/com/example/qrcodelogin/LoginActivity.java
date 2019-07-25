@@ -23,16 +23,15 @@ public class LoginActivity extends AppCompatActivity{
     Button loginBtn, resetBtn;
     EditText idText, pwText;
     String redirectQrToken;
-    SharedPreferences mPrefsUUID;
-    String uuid;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
 
-        mPrefsUUID = getSharedPreferences("uuid", MODE_PRIVATE);
-        uuid = mPrefsUUID.getString("uuid", "empty");
+        SharedPreferences mPrefsUUID = getSharedPreferences("uuid", MODE_PRIVATE);
+        String uuid = mPrefsUUID.getString("uuid", "empty");
+        System.out.println("uuid : "+uuid);
         if(uuid!="empty")
             validationGUID();
         else
@@ -55,6 +54,9 @@ public class LoginActivity extends AppCompatActivity{
         loginBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                SharedPreferences mPrefsUUID = getSharedPreferences("uuid", MODE_PRIVATE);
+                final String uuid = mPrefsUUID.getString("uuid", "empty");
+
                 final String id = idText.getText().toString();
                 final String password = pwText.getText().toString();
                 System.out.println("login onclick : " + id + ", " + password);
@@ -132,16 +134,15 @@ public class LoginActivity extends AppCompatActivity{
                                 String result = jsonResponse.getString("result");
                                 if (result.equals("1")) {
 
-                                    SharedPreferences mPrefs = getSharedPreferences("uuid", MODE_PRIVATE);
-                                    SharedPreferences.Editor prefsEditor = mPrefs.edit();
-                                    prefsEditor.remove("uuid");
-                                    prefsEditor.commit();
+                                    SharedPreferences mPrefsUUID = getSharedPreferences("uuid", MODE_PRIVATE);
+                                    mPrefsUUID.edit().clear().commit();
 
                                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                     builder.setMessage("디바이스 인증이 초기화되었습니다.")
                                             .setPositiveButton("확인", null)
                                             .create()
                                             .show();
+
                                 } else if (result.equals("0")) {
                                     AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                                     builder.setMessage("아이디 또는 비밀번호가 맞지 않습니다.")
@@ -206,22 +207,35 @@ public class LoginActivity extends AppCompatActivity{
     }
 
     private void validationGUID(){
+        SharedPreferences mPrefs = getSharedPreferences("token", MODE_PRIVATE);
+        String userToken = mPrefs.getString("userToken", "");
+
+        SharedPreferences mPrefsUUID = getSharedPreferences("uuid", MODE_PRIVATE);
+        String uuid = mPrefsUUID.getString("uuid", "empty");
+
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
                     System.out.println("/guid/validation response : " + response);
-                    JSONObject jsonResponse = new JSONObject(response);
+                    final JSONObject jsonResponse = new JSONObject(response);
 
                     String result = jsonResponse.getString("result");
+
                     if (result.equals("1")) {
+                        final String id = jsonResponse.getString("id");
+                        final String name = jsonResponse.getString("name");
                         String message = jsonResponse.getString("message");
                         AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
                         builder.setMessage(message)
                                 .setPositiveButton("확인", new DialogInterface.OnClickListener() {
                                     @Override
                                     public void onClick(DialogInterface dialog, int which) {
-                                        validationUserToken();
+                                    Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+                                    intent.putExtra("id", id);
+                                    intent.putExtra("name", name);
+                                    startActivity(intent);
+                                    finish();
                                     }
                                 })
                                 .create()
@@ -241,7 +255,7 @@ public class LoginActivity extends AppCompatActivity{
             }
         };
 
-        GUIDValidationRequest guidValidationRequest = new GUIDValidationRequest(uuid, responseListener);
+        GUIDValidationRequest guidValidationRequest = new GUIDValidationRequest(userToken, uuid, responseListener);
         RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
         queue.add(guidValidationRequest);
     }
