@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class GUIDValidationRequest extends StringRequest {
 
-    final static private String URL = "http://172.19.144.61:3000/guid/validation";
+    final static private String URL = "http://172.19.148.51:3000/guid/validation";
     private Map<String, String> parameters;
 
     public GUIDValidationRequest(String user_token, String uuid, Response.Listener<String> listener){

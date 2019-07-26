@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class QRTokenValidationRequest extends StringRequest {
 
-    final static private String URL = "http://172.19.144.61:3000/qrcode-auth";
+    final static private String URL = "http://172.19.148.51:3000/qrcode-auth";
     private Map<String, String> parameters;
 
     public QRTokenValidationRequest(String user_token, String qr_token, Response.Listener<String> listener){

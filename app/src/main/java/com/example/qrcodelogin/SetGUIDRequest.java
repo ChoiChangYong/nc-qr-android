@@ -9,7 +9,7 @@ import java.util.Map;
 
 public class SetGUIDRequest extends StringRequest {
 
-    final static private String URL = "http://172.19.144.61:3000/guid";
+    final static private String URL = "http://172.19.148.51:3000/guid";
     private Map<String, String> parameters;
 
     public SetGUIDRequest(String userToken, String uniqueID, Response.Listener<String> listener){
