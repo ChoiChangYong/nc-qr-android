@@ -7,16 +7,16 @@ import java.util.HashMap;
 import java.util.Map;
 
 
-public class SetGUIDRequest extends StringRequest {
+public class SetDeviceIdRequest extends StringRequest {
 
-    final static private String URL = "http://172.19.144.61:3000/guid";
+    final static private String URL = "http://172.20.51.188:3000/deviceId";
     private Map<String, String> parameters;
 
-    public SetGUIDRequest(String userToken, String uniqueID, Response.Listener<String> listener){
+    public SetDeviceIdRequest(String userSession, String deviceId, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
-        parameters.put("userToken",userToken);
-        parameters.put("uuid",uniqueID);
+        parameters.put("sessionID",userSession);
+        parameters.put("deviceId",deviceId);
     }
 
     @Override

@@ -6,15 +6,16 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class UserTokenValidationRequest extends StringRequest {
+public class DeviceIdVerificationRequest extends StringRequest {
 
-    final static private String URL = "http://172.19.144.61:3000/user-token/validation";
+    final static private String URL = "http://172.20.51.188:3000/guid/validation";
     private Map<String, String> parameters;
 
-    public UserTokenValidationRequest(String user_token, Response.Listener<String> listener){
+    public DeviceIdVerificationRequest(String userSession, String deviceId, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
-        parameters.put("user_token",user_token);
+        parameters.put("userSession",userSession);
+        parameters.put("deviceId",deviceId);
     }
 
     @Override
