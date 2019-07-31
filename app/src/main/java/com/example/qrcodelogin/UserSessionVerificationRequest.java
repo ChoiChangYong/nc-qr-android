@@ -6,17 +6,15 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
+public class UserSessionVerificationRequest extends StringRequest {
 
-public class SetGUIDRequest extends StringRequest {
-
-    final static private String URL = "http://172.19.148.51:3000/guid";
+    final static private String URL = "http://172.20.51.188:3000/session/verification";
     private Map<String, String> parameters;
 
-    public SetGUIDRequest(String userToken, String uniqueID, Response.Listener<String> listener){
+    public UserSessionVerificationRequest(String userSession, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
-        parameters.put("userToken",userToken);
-        parameters.put("uuid",uniqueID);
+        parameters.put("sessionID", userSession);
     }
 
     @Override

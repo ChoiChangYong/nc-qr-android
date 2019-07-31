@@ -6,16 +6,17 @@ import com.android.volley.toolbox.StringRequest;
 import java.util.HashMap;
 import java.util.Map;
 
-public class GUIDValidationRequest extends StringRequest {
 
-    final static private String URL = "http://172.19.148.51:3000/guid/validation";
+public class SetDeviceIdRequest extends StringRequest {
+
+    final static private String URL = "http://172.20.51.188:3000/deviceId";
     private Map<String, String> parameters;
 
-    public GUIDValidationRequest(String user_token, String uuid, Response.Listener<String> listener){
+    public SetDeviceIdRequest(String userSession, String deviceId, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
-        parameters.put("user_token",user_token);
-        parameters.put("uuid",uuid);
+        parameters.put("sessionID",userSession);
+        parameters.put("deviceId",deviceId);
     }
 
     @Override

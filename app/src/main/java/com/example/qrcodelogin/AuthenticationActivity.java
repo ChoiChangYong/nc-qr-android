@@ -3,12 +3,12 @@ package com.example.qrcodelogin;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.toolbox.Volley;
@@ -18,11 +18,11 @@ import org.json.JSONObject;
 public class AuthenticationActivity extends AppCompatActivity {
 
     public static final String QRLOGIN_DEEP_LINK = "/qrlogin";
-    String qrToken, userToken;
+    String qrcodeSession, userSession;
     AlertDialog alertDialog;
     String id, name;
     Uri uri;
-    String redirectQrToken;
+    String redirectQrLogin;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -34,12 +34,12 @@ public class AuthenticationActivity extends AppCompatActivity {
 //            finish();
 //        }
 
-        redirectQrToken = intent.getStringExtra("redirectQrToken");
-        System.out.println("redirectQrToken : "+redirectQrToken);
-        if(redirectQrToken!=null){
-            qrToken = redirectQrToken;
-            SharedPreferences mPrefs = getSharedPreferences("token", MODE_PRIVATE);
-            userToken = mPrefs.getString("userToken", "empty");
+        redirectQrLogin = intent.getStringExtra("redirectQrLogin");
+        System.out.println("redirectQrLogin : "+redirectQrLogin);
+        if(redirectQrLogin!=null){
+            qrcodeSession = redirectQrLogin;
+            SharedPreferences mPrefs = getSharedPreferences("userSession", MODE_PRIVATE);
+            userSession = mPrefs.getString("userSession", "empty");
 
             validationQRToken();
         }
@@ -53,12 +53,12 @@ public class AuthenticationActivity extends AppCompatActivity {
 
         uri = getIntent().getData();
         System.out.println("[openDeepLink] uri : "+uri);
-        qrToken = uri.getQueryParameter("qr_token");
-        redirectQrToken = qrToken;
-        System.out.println("[openDeepLink] qrToken : "+qrToken);
+        qrcodeSession = uri.getQueryParameter("key");
+        redirectQrLogin = qrcodeSession;
+        System.out.println("[openDeepLink] qrcodeSession : "+qrcodeSession);
 
         if (QRLOGIN_DEEP_LINK.equals(path)) {
-            validationUserToken();
+            verifyUserSession();
         }
     }
 
@@ -67,7 +67,7 @@ public class AuthenticationActivity extends AppCompatActivity {
             @Override
             public void onResponse(String response) {
                 try {
-                    System.out.println("/qrcode-token/validation response : " + response);
+                    System.out.println("/qrcode-auth response : " + response);
                     JSONObject jsonResponse = new JSONObject(response);
 
                     String result = jsonResponse.getString("result");
@@ -100,15 +100,15 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         };
 
-        QRTokenValidationRequest qrTokenValidationRequest = new QRTokenValidationRequest(userToken, qrToken, responseListener);
+        QRTokenValidationRequest qrTokenValidationRequest = new QRTokenValidationRequest(userSession, qrcodeSession, responseListener);
         RequestQueue queue = Volley.newRequestQueue(AuthenticationActivity.this);
         queue.add(qrTokenValidationRequest);
     }
 
-    private void validationUserToken(){
-        SharedPreferences mPrefs = getSharedPreferences("token", MODE_PRIVATE);
-        userToken = mPrefs.getString("userToken", "empty");
-        System.out.println("userToken : "+userToken);
+    private void verifyUserSession(){
+        SharedPreferences mPrefs = getSharedPreferences("userSession", MODE_PRIVATE);
+        userSession = mPrefs.getString("userSession", "empty");
+        System.out.println("userSession : "+userSession);
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
@@ -120,12 +120,10 @@ public class AuthenticationActivity extends AppCompatActivity {
                     String result = jsonResponse.getString("result");
 
                     if (result.equals("1")) {
-                        id = jsonResponse.getString("id");
-                        name = jsonResponse.getString("name");
-                        validationQRToken();
+                        getUserInfoBySessionID(userSession);
                     } else if (result.equals("0")) {
                         Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
-                        intent.putExtra("redirectQrToken", redirectQrToken);
+                        intent.putExtra("redirectQrLogin", redirectQrLogin);
                         startActivity(intent);
                         finish();
                     }
@@ -135,9 +133,39 @@ public class AuthenticationActivity extends AppCompatActivity {
             }
         };
 
-        UserTokenValidationRequest userTokenValidationRequest = new UserTokenValidationRequest(userToken, responseListener);
+        UserSessionVerificationRequest userSessionVerificationRequest = new UserSessionVerificationRequest(userSession, responseListener);
         RequestQueue queue = Volley.newRequestQueue(AuthenticationActivity.this);
-        queue.add(userTokenValidationRequest);
+        queue.add(userSessionVerificationRequest);
+    }
+
+    private void getUserInfoBySessionID(String userSession){
+        Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    System.out.println("/users/:sessionID response : " + response);
+                    JSONObject jsonResponse = response;
+
+                    String result = jsonResponse.getString("result");
+                    if (result.equals("1")) {
+                        id = jsonResponse.getString("id");
+                        name = jsonResponse.getString("name");
+                        validationQRToken();
+                    } else if (result.equals("0")) {
+                        Intent intent = new Intent(getApplicationContext(), LoginActivity.class);
+                        intent.putExtra("redirectQrLogin", redirectQrLogin);
+                        startActivity(intent);
+                        finish();
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        };
+        String url = "http://172.20.51.188:3000/users/"+userSession;
+        CommonGetHttpRequest commonGetHttpRequest = new CommonGetHttpRequest(Request.Method.GET, url, null, responseListener, null);
+        RequestQueue queue = Volley.newRequestQueue(AuthenticationActivity.this);
+        queue.add(commonGetHttpRequest);
     }
 
     @Override

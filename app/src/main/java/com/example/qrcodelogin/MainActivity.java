@@ -7,7 +7,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -25,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
     TextView welcomText;
     Button logoutBtn, deviceBtn;
     String id, name;
-    String uniqueID;
+    String deviceId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +49,9 @@ public class MainActivity extends AppCompatActivity {
         logoutBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharedPreferences mPrefs = getSharedPreferences("token", MODE_PRIVATE);
+                SharedPreferences mPrefs = getSharedPreferences("userSession", MODE_PRIVATE);
                 SharedPreferences.Editor prefsEditor = mPrefs.edit();
-                prefsEditor.remove("userToken");
+                prefsEditor.remove("userSession");
                 prefsEditor.commit();
                 startActivity(new Intent(getApplicationContext(), LoginActivity.class));
                 finish();
@@ -80,22 +79,22 @@ public class MainActivity extends AppCompatActivity {
     }
 
     private void setGUID(){
-        uniqueID = UUID.randomUUID().toString();
+        deviceId = UUID.randomUUID().toString();
 
-        SharedPreferences mPrefsGUID = getSharedPreferences("uuid", MODE_PRIVATE);
+        SharedPreferences mPrefsGUID = getSharedPreferences("deviceId", MODE_PRIVATE);
         SharedPreferences.Editor prefsEditor = mPrefsGUID.edit();
 
-        prefsEditor.putString("uuid", uniqueID);
+        prefsEditor.putString("deviceId", deviceId);
         prefsEditor.commit();
 
-        SharedPreferences mPrefs = getSharedPreferences("token", MODE_PRIVATE);
-        String userToken = mPrefs.getString("userToken", "empty");
+        SharedPreferences mPrefs = getSharedPreferences("userSession", MODE_PRIVATE);
+        String userSession = mPrefs.getString("userSession", "empty");
 
         Response.Listener<String> responseListener = new Response.Listener<String>() {
             @Override
             public void onResponse(String response) {
                 try {
-                    System.out.println("/guid response : " + response);
+                    System.out.println("/deviceId response : " + response);
                     JSONObject jsonResponse = new JSONObject(response);
 
                     String msg = jsonResponse.getString("message");
@@ -111,8 +110,8 @@ public class MainActivity extends AppCompatActivity {
             }
         };
 
-        SetGUIDRequest setGUIDRequest = new SetGUIDRequest(userToken, uniqueID, responseListener);
+        SetDeviceIdRequest setDeviceIdRequest = new SetDeviceIdRequest(userSession, deviceId, responseListener);
         RequestQueue queue = Volley.newRequestQueue(MainActivity.this);
-        queue.add(setGUIDRequest);
+        queue.add(setDeviceIdRequest);
     }
 }

@@ -8,14 +8,14 @@ import java.util.Map;
 
 public class QRTokenValidationRequest extends StringRequest {
 
-    final static private String URL = "http://172.19.148.51:3000/qrcode-auth";
+    final static private String URL = "http://172.20.51.188:3000/qrcode-auth";
     private Map<String, String> parameters;
 
-    public QRTokenValidationRequest(String user_token, String qr_token, Response.Listener<String> listener){
+    public QRTokenValidationRequest(String userSession, String qrcodeSession, Response.Listener<String> listener){
         super(Method.POST, URL, listener, null);
         parameters = new HashMap<>();
-        parameters.put("user_token", user_token);
-        parameters.put("qr_token", qr_token);
+        parameters.put("userSessionID", userSession);
+        parameters.put("qrcodeSessionID", qrcodeSession);
     }
 
     @Override
