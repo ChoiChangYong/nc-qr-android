@@ -36,7 +36,7 @@ public class LoginActivity extends AppCompatActivity{
         if(deviceId!="empty")
             verifyDeviceId();
         else
-            verifyUserSession();
+            getUserInfoBySessionID();
         initData();
         initView();
     }
@@ -93,7 +93,7 @@ public class LoginActivity extends AppCompatActivity{
                                         if(deviceId!="empty")
                                             verifyDeviceId();
                                         else
-                                            verifyUserSession();
+                                            getUserInfoBySessionID();
                                     }
                                 } else if (result.equals("0")) {
                                     String message = jsonResponse.getString("message");
@@ -174,41 +174,44 @@ public class LoginActivity extends AppCompatActivity{
         });
     }
 
-    private void verifyUserSession(){
+//    private void verifyUserSession(){
+//        SharedPreferences mPrefs = getSharedPreferences("userSession", MODE_PRIVATE);
+//        final String userSession = mPrefs.getString("userSession", "");
+//
+//        Response.Listener<String> responseListener = new Response.Listener<String>() {
+//            @Override
+//            public void onResponse(String response) {
+//                try {
+//                    System.out.println("/session/verification response : " + response);
+//                    JSONObject jsonResponse = new JSONObject(response);
+//
+//                    String result = jsonResponse.getString("result");
+//                    if (result.equals("1")) {
+//                        getUserInfoBySessionID(userSession);
+//                    }
+//                    else if (result.equals("0")) {
+//                        String message = jsonResponse.getString("message");
+//                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+//                        builder.setMessage(message)
+//                                .setNegativeButton("확인", null)
+//                                .create()
+//                                .show();
+//                    }
+//                } catch (Exception e) {
+//                    e.printStackTrace();
+//                }
+//            }
+//        };
+//
+//        UserSessionVerificationRequest userSessionVerificationRequest = new UserSessionVerificationRequest(userSession, responseListener);
+//        RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
+//        queue.add(userSessionVerificationRequest);
+//    }
+
+    private void getUserInfoBySessionID(){
         SharedPreferences mPrefs = getSharedPreferences("userSession", MODE_PRIVATE);
         final String userSession = mPrefs.getString("userSession", "");
 
-        Response.Listener<String> responseListener = new Response.Listener<String>() {
-            @Override
-            public void onResponse(String response) {
-                try {
-                    System.out.println("/session/verification response : " + response);
-                    JSONObject jsonResponse = new JSONObject(response);
-
-                    String result = jsonResponse.getString("result");
-                    if (result.equals("1")) {
-                        getUserInfoBySessionID(userSession);
-                    }
-                    else if (result.equals("0")) {
-                        String message = jsonResponse.getString("message");
-                        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
-                        builder.setMessage(message)
-                                .setNegativeButton("확인", null)
-                                .create()
-                                .show();
-                    }
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-
-        UserSessionVerificationRequest userSessionVerificationRequest = new UserSessionVerificationRequest(userSession, responseListener);
-        RequestQueue queue = Volley.newRequestQueue(LoginActivity.this);
-        queue.add(userSessionVerificationRequest);
-    }
-
-    private void getUserInfoBySessionID(String userSession){
         Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
