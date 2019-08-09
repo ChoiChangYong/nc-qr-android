@@ -47,6 +47,7 @@
             android:layout_height="50dp"
             android:layout_marginHorizontal="60dp"
             android:layout_marginVertical="10dp"
+            android:visibility="invisible"
             android:text="디바이스 등록" />
         <Button
             android:id="@+id/logout_btn"
